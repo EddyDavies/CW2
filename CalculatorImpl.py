@@ -18,7 +18,7 @@ def load_json_expr(json_path):
         data = json.load(f)
         data = data["root"]
         
-        op = getOperation(data)
+        op = {"actions": None}
         total = getDeepest(data, op, 0)
 
     
@@ -41,13 +41,7 @@ def getOperation(data):
             op["actions"].append(["times", 2, True])
             op["calculate"] = False
         else:
-            op["actions"].append(["times", 2. False])
-
-    
-    
-    else:
-        if op["times_deeper"]:
-            actions.append(["times", 2])
+            op["actions"].append(["times", 2, False])
 
     try:
         test = data["minus"]
@@ -88,43 +82,45 @@ def getOperation(data):
         else:
             op["actions"].append(["plus", i, False])
     
-    
     return op
 
-def performOp(data, op, total):
+def performOperation(data, op, total):
     
     calculated = 0
     print("Data         " , data)
 
     for action in op["actions"]:
-        values = []
-        for i in range(action[1])
+        first = None
+
+        for i in range(action[1]):
             try:
-                values.append(data[action[0]][i]["int"])
-            except:
-                values.append(total)
+                value = data[action[0]][i]["int"]
+            except: 
+                value = total
+
+            if action[0] is "plus":
+                calculated += value 
+            elif first is None:
+                first = value
             else:
-                pass
-            
-        calculated = values[0] * values[1] 
+                if action[0] is "times":
+                    calculated = first * value
+                elif action[0] is "minus":
+                    calculated = first - value
+                first = None
 
-    elif op["minus"]:
-        calculated = data["minus"][0]["int"] * data["minus"][0]["int"] 
-        perform = "minus"
-
-    elif op["plus"]:
-        for i in range(op["plus_count"]):
-            calculated += data["plus"][i]["int"] 
-        # for i in range(op["plus_count"])
-        perform = "plus"
-    
-    
+    print("                       ",op)
+    print()
+    print("                       ",data)
+    print()
+    print(calculated)
 
     return calculated
 
-
 def getDeepest(data, op, total):
-   
+    if op["actions"] is None:
+        op = getOperation(data)
+
     for action in op["actions"]:
         for i in range(action[1]):
             current_data = data[action[0]][i]
@@ -136,7 +132,7 @@ def getDeepest(data, op, total):
             # print()
             if current_op["calculate"]:
                 print(action[0], " calculate it")
-                total = performOp(data, current_op, total)
+                total = performOperation(data, current_op, total)
                 break
             else:
                 print(action[0]," go deeper")
@@ -149,7 +145,7 @@ def getDeepest(data, op, total):
 # the assignment you need to replace the keyword "pass" in the above
 # two functions with code that does the appropriate work.
 if __name__=='__main__':
-    expr_file_path = "/Users/edwarddavies/Documents/UoM/_Modelling Data/CW2/expression7.json"
+    expr_file_path = "/Users/edwarddavies/Documents/UoM/_Modelling Data/CW2/expression1.json"
 
     # expr_file_path = sys.argv[1]
     print(evaluate_expr(load_json_expr(expr_file_path)))
