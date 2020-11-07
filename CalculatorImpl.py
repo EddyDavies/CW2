@@ -27,22 +27,21 @@ def load_json_expr(json_path):
 def getOperation(data):
     op = {}
     op["actions"] = []
+    op["calculate"] = True
 
     try:
         test = data["times"]
     except:
-        op["times"] = False
-        op["times_deeper"] = False
+        pass
     else:
-        op["times"] = True
         try:
             test = data["times"][0]["int"]
             test = data["times"][1]["int"]
         except:
-            op["times_deeper"] = True
-            op["actions"].append(["times", 2])
+            op["actions"].append(["times", 2, True])
+            op["calculate"] = False
         else:
-            op["times_deeper"] = False
+            op["actions"].append(["times", 2. False])
 
     
     
@@ -53,28 +52,23 @@ def getOperation(data):
     try:
         test = data["minus"]
     except:
-        op["minus"] = False
-        op["minus_deeper"] = False
+        pass
     else:
-        op["minus"] = True
         try:
             test = data["minus"][0]["int"]
             test = data["minus"][1]["int"]
         except:
-            op["minus_deeper"] = True
-            op["actions"].append(["minus", 2])
+            op["actions"].append(["minus", 2, True])
+            op["calculate"] = False
         else:
-            op["minus_deeper"] = False
+            op["actions"].append(["minus", 2, False])
 
 
     try:
         test = data["plus"]
     except:
-        op["plus"] = False
-        op["plus_deeper"] = False
+        pass
     else:
-        op["plus"] = True
-
         success = True
         i = 0
         while success:
@@ -84,62 +78,34 @@ def getOperation(data):
                 success = False
             else:
                 i+=1
-        op["plus_count"] = i
-
+                
         try:
             for j in range(i):
                 test = data["plus"][j]["int"]
         except:
-            op["plus_deeper"] = True
-            op["actions"].append(["plus", i])
+            op["actions"].append(["plus", i, True])
+            op["calculate"] = False
         else:
-            op["plus_deeper"] = False
+            op["actions"].append(["plus", i, False])
     
-    if op["plus_deeper"] or op["minus_deeper"] or op["times_deeper"]:
-        op["calculate"] = False
-    else:
-        op["calculate"] = True
-
     
     return op
 
 def performOp(data, op, total):
-    values = []
     
-    try:
-         test = op["times"]
-    except:
-        pass
-    else:
-        if op["times_deeper"]:
-            actions.append(["times", 2])
-
-    try:
-         test = op["minus"]
-    except:
-        pass
-    else:
-        if op["minus_deeper"]:
-            actions.append(["minus", 2])
-            
-    try:
-         test = op["plus"]
-    except:
-        pass
-    else:
-        if op["plus_deeper"]:
-            actions.append(["plus", op["plus_count"]])
-
     calculated = 0
     print("Data         " , data)
-    if op["times"]:
-        for i in range(2)
+
+    for action in op["actions"]:
+        values = []
+        for i in range(action[1])
             try:
-                values.append(data["times"][i]["int"])
+                values.append(data[action[0]][i]["int"])
             except:
                 values.append(total)
             else:
-                pass  
+                pass
+            
         calculated = values[0] * values[1] 
 
     elif op["minus"]:
@@ -158,34 +124,7 @@ def performOp(data, op, total):
 
 
 def getDeepest(data, op, total):
-
-    # actions = []
-
-    # try:
-    #      test = op["times"]
-    # except:
-    #     pass
-    # else:
-    #     if op["times_deeper"]:
-    #         actions.append(["times", 2])
-
-    # try:
-    #      test = op["minus"]
-    # except:
-    #     pass
-    # else:
-    #     if op["minus_deeper"]:
-    #         actions.append(["minus", 2])
-            
-    # try:
-    #      test = op["plus"]
-    # except:
-    #     pass
-    # else:
-    #     if op["plus_deeper"]:
-    #         actions.append(["plus", op["plus_count"]])
-    
-            
+   
     for action in op["actions"]:
         for i in range(action[1]):
             current_data = data[action[0]][i]
