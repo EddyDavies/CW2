@@ -86,10 +86,10 @@ def getOperation(data):
             test = data["times"][0]["int"]
             test = data["times"][1]["int"]
         except:
-            op["actions"].append(["times", 2, True])
+            op["actions"].append(["times", 2, {"deeper" : True}])
             op["calculate"] = False
         else:
-            op["actions"].append(["times", 2, False])
+            op["actions"].append(["times", 2, {"deeper" : False}])
 
     try:
         test = data["minus"]
@@ -100,10 +100,10 @@ def getOperation(data):
             test = data["minus"][0]["int"]
             test = data["minus"][1]["int"]
         except:
-            op["actions"].append(["minus", 2, True])
+            op["actions"].append(["minus", 2, {"deeper" : True}])
             op["calculate"] = False
         else:
-            op["actions"].append(["minus", 2, False])
+            op["actions"].append(["minus", 2, {"deeper" : False}])
 
 
     try:
@@ -125,10 +125,10 @@ def getOperation(data):
             for j in range(i):
                 test = data["plus"][j]["int"]
         except:
-            op["actions"].append(["plus", i, True])
+            op["actions"].append(["plus", i, {"deeper" : True}])
             op["calculate"] = False
         else:
-            op["actions"].append(["plus", i, False])
+            op["actions"].append(["plus", i, {"deeper" : False}])
     
     if checked is 3:
         op["tier_up"] = True 
