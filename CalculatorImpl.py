@@ -10,7 +10,7 @@ def evaluate_expr(parsed_expr):
     op = {"actions": None}
     total = getDeepest(parsed_expr, op)
     
-    print(parsed_expr["description"])
+    # print(parsed_expr["description"])
     return total
 def load_json_expr(json_path):
     """This function takes a file path to a JSON file  represened
@@ -27,12 +27,14 @@ def getDeepest(data, op):
     total = []
 
     if op["actions"] is None:
-        # print("Action is None")
         op = getOperation(data)
-        if op["calculate"]:
-            # print("Calculate from None")
+
+        if op["calculate"] and not op["tier_up"]:
             total = performOperation(data, op, total)
             return total
+        elif op["tier_up"]:
+            return data["int"]
+
             
 
     for action in op["actions"]:
@@ -43,12 +45,6 @@ def getDeepest(data, op):
         for i in range(action[1]):
             current_data = data[action[0]][i]
             current_op = getOperation(current_data)
-            # print()
-            # print("current_op")
-            # print("        ", current_op)
-            # print("current_data")
-            # print("        ",current_data)
-            # print()
             if current_op["calculate"] and not current_op["tier_up"]:
                 # print("Perform ", action[0], " calculation on current")
                 total[i] = performOperation(current_data, current_op, total)
