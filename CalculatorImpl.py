@@ -18,21 +18,67 @@ def load_json_expr(json_path):
         data = json.load(f)
         data = data["root"]
         
-        op = {"actions": None}
-        total = getDeepest(data, op, 0)
+    return data
 
-    
+def getDeepest(data, op, total):
+    if op["actions"] is None:
+        print("Action is None")
+        op = getOperation(data)
+        if op["calculate"]:
+            print("Calculate from None")
+            total = performOperation(data, op, total)
+
+    print()
+    print("op")
+    print("        ", op)
+    print("data")
+    print("        ",data)
+    print()
+
+    for action in op["actions"]:
+        for i in range(action[1]):
+            current_data = data[action[0]][i]
+            current_op = getOperation(current_data)
+            if current_op["calculate"] and not current_op["tier_up"]:
+                # print()
+                # print("current_op")
+                # print("        ", current_op)
+                # print("current_data")
+                # print("        ",current_data)
+                # print()
+                # print("Perform ", action[0], " calculation on current")
+                total = performOperation(current_data, current_op, total)
+            elif current_op["tier_up"]:
+                # print()
+                # print("op")
+                # print("        ", op)
+                # print("data")
+                # print("        ",data)
+                # print()
+                # print("Perform ", action[0], " calculation on layer above.")
+                total = performOperation(data, op, total)
+            else:
+                # print()
+                # print("current_op")
+                # print("        ", current_op)
+                # print("current_data")
+                # print("        ",current_data)
+                # print()
+                # print("Another layer Nested inside the ", action[0])
+                total = getDeepest(current_data, op, total)
+
+            print("Running Total = ", total)
+
     return total
 
 def getOperation(data):
-    op = {}
-    op["actions"] = []
-    op["calculate"] = True
+    op = {"actions" : [], "calculate": True, "tier_up" : False}
+    checked = 0
 
     try:
         test = data["times"]
     except:
-        pass
+        checked +=1
     else:
         try:
             test = data["times"][0]["int"]
@@ -46,7 +92,7 @@ def getOperation(data):
     try:
         test = data["minus"]
     except:
-        pass
+        checked +=1
     else:
         try:
             test = data["minus"][0]["int"]
@@ -61,7 +107,7 @@ def getOperation(data):
     try:
         test = data["plus"]
     except:
-        pass
+        checked +=1
     else:
         success = True
         i = 0
@@ -82,6 +128,9 @@ def getOperation(data):
         else:
             op["actions"].append(["plus", i, False])
     
+    if checked is 3:
+        op["tier_up"] = True 
+
     return op
 
 def performOperation(data, op, total):
