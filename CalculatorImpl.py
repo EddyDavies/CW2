@@ -6,18 +6,20 @@ def evaluate_expr(parsed_expr):
     """This function takes an expression parsed from the JSON
        arithmetic expression format and returns the full evaluation.
        That is, if the JSON expresses '1+1', this function returns '2'."""
-    pass
 
+    op = {"actions": None}
+    total = getDeepest(parsed_expr, op, 0)
+    
+    return total
 def load_json_expr(json_path):
     """This function takes a file path to a JSON file  represened
        as a string and returns a parsed form. You can presume that
        the JSON file is valid wrt the arithmetic expression format."""
-    end = False
 
     with open(json_path, "r") as f:
         data = json.load(f)
         data = data["root"]
-        
+    
     return data
 
 def getDeepest(data, op, total):
