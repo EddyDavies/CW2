@@ -46,11 +46,11 @@ def getDeepest(data, op):
             current_data = data[action[0]][i]
             current_op = getOperation(current_data)
             if current_op["calculate"] and not current_op["tier_up"]:
-                # print("Perform ", action[0], " calculation on current")
+                # print("Perform ", current_op["actions"][0][i], " calculation on current")
                 total[i] = performOperation(current_data, current_op, total)
             elif current_op["tier_up"]:
                 # print("Perform ", action[0], " calculation on layer above.")
-                total[i] = performOperation(data, op, total)
+                total[i] = current_data["int"]
             else:
                 # print("Another layer Nested inside the ", action[0])
                 total[i] = getDeepest(current_data, current_op)
