@@ -26,7 +26,7 @@ def load_json_expr(json_path):
 def getDeepest(data, op):
     total = []
 
-    if op["actions"] is None:
+    if op["actions"] == None:
         op = getOperation(data)
 
         if op["calculate"] and not op["tier_up"]:
@@ -55,7 +55,7 @@ def getDeepest(data, op):
                 # print("Another layer Nested inside the ", action[0])
                 total[i] = getDeepest(current_data, current_op)
             
-            if total[-1] is not None:
+            if total[-1] !=  None:
                 # print("Perform ", action[0], " calculation of totals.")
                 total = performOperation(data, op, total)
 
@@ -119,7 +119,7 @@ def getOperation(data):
         else:
             op["actions"].append(["plus", i, {"deeper" : False}])
     
-    if checked is 3:
+    if checked == 3:
         op["tier_up"] = True 
 
     return op
@@ -137,14 +137,14 @@ def performOperation(data, op, total):
             except: 
                 value = total[i]
 
-            if action[0] is "plus":
+            if action[0] == "plus":
                 calculated += value 
-            elif first is None:
+            elif first == None:
                 first = value
             else:
-                if action[0] is "times":
+                if action[0] == "times":
                     calculated = first * value
-                elif action[0] is "minus":
+                elif action[0] == "minus":
                     calculated = first - value
                 first = None
 
